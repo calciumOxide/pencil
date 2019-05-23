@@ -5,7 +5,56 @@
   源码地址：```https://github.com/etcd-io/etcd```
   
   Golang编译 ......
-  
+
+## 1.1.5 二进制安装
+tar xf /root/etcd-v3.1.7-linux-amd64.tar.gz
+
+### etcd systemd配置文件
+```text
+vim /usr/lib/systemd/system/etcd.service
+[Unit]
+Description=Etcd Server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/lib/etcd
+EnvironmentFile=-/usr/local/kubernetes/config/etcd.conf
+ExecStart=/usr/local/kubernetes/bin/etcd \
+        --name=${ETCD_NAME} \
+        --data-dir=${ETCD_DATA_DIR} \
+        --listen-peer-urls=${ETCD_LISTEN_PEER_URLS} \
+        --listen-client-urls=${ETCD_LISTEN_CLIENT_URLS} \
+        --advertise-client-urls=${ETCD_ADVERTISE_CLIENT_URLS} \
+        --initial-advertise-peer-urls=${ETCD_INITIAL_ADVERTISE_PEER_URLS} \
+        --initial-cluster=${ETCD_INITIAL_CLUSTER} \
+        --initial-cluster-token=${ETCD_INITIAL_CLUSTER_TOKEN} \
+        --initial-cluster-state=${ETCD_INITIAL_CLUSTER_STATE}
+Type=notify
+
+[Install]
+WantedBy=multi-user.target
+
+``` 
+### etcd配置文件
+
+```text
+etcd配置文件
+[root@server1 ~]# cat /usr/local/kubernetes/config/etcd.conf 
+#[member]
+ETCD_NAME="etcd01"                                          ###修改为本机对应的名字，etcd02，etcd03
+ETCD_DATA_DIR="/var/lib/etcd/default.etcd"
+ETCD_LISTEN_PEER_URLS="http://0.0.0.0:2380"
+ETCD_LISTEN_CLIENT_URLS="http://0.0.0.0:2379"
+
+#[cluster]
+ETCD_INITIAL_ADVERTISE_PEER_URLS="http://10.10.10.1:2380"     ###修改为本机IP
+ETCD_INITIAL_CLUSTER="etcd01=http://10.10.10.1:2380,etcd02=http://10.10.10.2:2380,etcd03=http://10.10.10.3:2380"    ###把IP更换成集群IP
+ETCD_INITIAL_CLUSTER_STATE="new"
+ETCD_INITIAL_CLUSTER_TOKEN="k8s-etcd-cluster"
+ETCD_ADVERTISE_CLIENT_URLS="http://10.10.10.1:2379"           ###修改为本机IP
+
+```
   
 ## 1.2 安装包
 
@@ -26,6 +75,11 @@ rm -f /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz
 
 /tmp/etcd-download-test/etcd --version
 ETCDCTL_API=3 /tmp/etcd-download-test/etcdctl version
+```
+
+### 1.2.1 关闭防火墙
+```$xslt
+systemctl status firewalld.service
 ```
 
 ## 1.3 配置
