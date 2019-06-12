@@ -87,8 +87,8 @@ systemctl status firewalld.service
   ### 1.3.1 版本选择
   ```$xslt
     /tmp/etcd-download-test/etcd --version
-    ETCDCTL_API=3 
-    ETCDCTL_API=2
+    export ETCDCTL_API=3
+    export ETCDCTL_API=2
     /tmp/etcd-download-test/etcdctl version
   ``` 
   ### 1.3.2 etcd 命令 

@@ -54,7 +54,7 @@ WantedBy=multi-user.target
 
 ```
 ```text
-kube-apiserver --logtostderr=true --v=4 --etcd-servers=http://10.112.118.166:2379 --insecure-bind-address=0.0.0.0 --insecure-port=8080 --advertise-address=10.112.118.166 --service-cluster-ip-range=10.0.0.0/24 &
+kube-apiserver --logtostderr=true --v=4 --etcd-servers=http://172.16.33.6:2379 --insecure-bind-address=0.0.0.0 --insecure-port=8080 --advertise-address=172.16.33.6 --service-cluster-ip-range=172.16.33.6/24 &
 ```
 
 ## 3、安装Scheduler
@@ -92,7 +92,7 @@ WantedBy=multi-user.target
 
 ```
 ```text
-kube-scheduler --logtostderr=true --v=4 --master=10.112.118.166:8080 --leader-elect &
+kube-scheduler --logtostderr=true --v=4 --master=172.16.33.6:8080 --leader-elect &
 ```
 
 ## 4、controller-manager安装
@@ -134,7 +134,7 @@ WantedBy=multi-user.target
 ```
 
 ```text
-kube-controller-manager --logtostderr=true --v=4 --master=10.112.118.166:8080 &
+kube-controller-manager --logtostderr=true --v=4 --master=172.16.33.6:8080 &
 ```
 
 ## 5、安装kubelet
@@ -242,7 +242,7 @@ WantedBy=multi-user.target
 [root@server1 ~]# systemctl start kubelet  
 ```
 ```text
-kubelet --logtostderr=true --v=4 --address=10.112.118.166 --port=10250 --hostname-override=10.112.118.166 --kubeconfig=/usr/k8s.config/kubelet.cfg --cluster-dns=10.0.0.2 --cluster-domain=cluster.local --fail-swap-on=false &
+kubelet --logtostderr=true --v=4 --address=172.16.33.6 --port=10250 --hostname-override=172.16.33.6 --kubeconfig=/usr/k8s.config/kubelet.cfg --cluster-dns=192.168.6.2 --cluster-domain=cluster.local --fail-swap-on=false &
 
 ```
 
@@ -293,5 +293,5 @@ WantedBy=multi-user.target
 [root@server2 ~]# systemctl restart kube-proxy
 ```
  ```text
-kube-proxy --logtostderr=true --v=4 --hostname-override=10.112.118.166 --master=http://10.112.118.166:8080 &
+kube-proxy --logtostderr=true --v=4 --hostname-override=172.16.33.6 --master=http://172.16.33.6:8080 &
 ```

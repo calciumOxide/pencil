@@ -67,7 +67,7 @@ etcdctl mkdir /atomic.io/network
   -- { "Network": "172.17.0.0/16", "SubnetLen": 24, "Backend": { "Type": "vxlan" } }
 ```
 ```text
-flanneld -etcd-endpoints=http://10.112.118.166:2379 -etcd-prefix=/atomic.io/network &
+flanneld -etcd-endpoints=http://172.16.33.6:2379 -etcd-prefix=/atomic.io/network &
 ```
 
 ### 5、设置docker配置
